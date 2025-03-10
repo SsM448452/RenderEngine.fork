@@ -113,24 +113,27 @@ void Scene::resetFrameBuffer(const int width, const int height) {
 	_entities.clear();
 	_uniqueId = 0;
 
-	// TODO: Set the pixelSize value to be responsive to the screen properties: width and height
-	const int pixelSize = 45;
+	// Calcula el tamaño de cada píxel en función del ancho y alto de la pantalla para mantener una proporción adecuada
+	int pixelSize = std::min(width, height) / 16;
+	/// poruqe 16 es la mitad de los pixeles que hay.
 
-	// TODO: Place the FrameBuffer in the middle of the screen with the max possible size
+	// Define un rectángulo que representa el área del framebuffer y lo posiciona en el centro de la pantalla  
 	SDL_Rect frameBufferRect{
-		.x = 400,
-		.y = 50,
-		.w = 600,
-		.h = 600,
+		.x = (width - pixelSize * 16) / 2,
+		.y = (height - pixelSize * 16) / 2,
+		.w = pixelSize * 16,
+		.h = pixelSize * 16,
 	};
 
 	for (int i = 0; i < _frameBuffer.size(); ++i) {
 		const SDL_Point pixelCoords{ i % 16 , i / 16 };
+	/// estos son los tamaños que he visto que quedan mejor para hacer el cuadrado.
 
-		// TODO: Find each pixelPosition from pixel coordinates and framebuffer properties
-		const SDL_Point pixelPosition{
-			.x = pixelCoords.x * 30,
-			.y = pixelCoords.y * 30,
+		// Calcula las coordenadas (x, y) del píxel dentro de la cuadrícula de 16x16  	
+			const SDL_Point pixelPosition{
+			.x = frameBufferRect.x + pixelCoords.x * pixelSize,
+			.y = frameBufferRect.y + pixelCoords.y * pixelSize,
+
 		};
 
 		const SDL_Rect pixelRect = {
@@ -142,15 +145,16 @@ void Scene::resetFrameBuffer(const int width, const int height) {
 
 		addEntity(Entity(consumeId(), "Pixel", pixelRect, _frameBuffer.at(i)));
 	}
+	///estoy haciendo el cuadrado mas las coordenadas por el tamaño de los pixeles, y colocandolo en la posicion.
 
-	// TODO: You can delete or comment this lines to hide the frameBuffer rectangle
+	// Si quieres ocultar el rectángulo del framebuffer, puedes eliminar o comentar estas líneas
 	Entity frameBufferEntity(consumeId(), "FrameBuffer", frameBufferRect, ImColor{ 255,255,255,255 });
 	frameBufferEntity.setFilled(false);
 	addEntity(std::move(frameBufferEntity));
 }
 
 void Scene::initializeFrameBuffer() {
-	ImColor Void = { 255,255,255,0 };
+	ImColor Void = { 255,255,255,50 };
 	ImColor Black = { 0,0,0,255 };
 	ImColor White = { 255,255,255,255 };
 	ImColor Green = { 28,148,134,255 };
