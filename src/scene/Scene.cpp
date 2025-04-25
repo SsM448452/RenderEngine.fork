@@ -127,17 +127,19 @@ void Scene::resetFrameBuffer(const int width, const int height) {
 	Log::Debug(std::format("pitch: {}", pitch));
 
 
-	//input
-	float inicial = 0.5f;
-	float final = 1.f;
-	int numdivisions = 7;
+
+    //input-Aqui poso a on vull que començi el persentaje de color, i el numero de divisions
+	float inicial = 1.f;
+	float final = 0.5f;
+	int numdivisions = 10;
+
 
 	float diferencial = (final - inicial) / numdivisions;
 
-	// TODO: Set the proper frame buffer size
+	//Aqui he cambiat el tamany del frame buffer
 	const int frameBufferSize = height * width;
 	for (int i = 0; i < frameBufferSize; ++i) {
-		// TODO: Find the pixel coordinates for each index
+		//Aqui les coordenades dels pixels 
 		const SDL_Point pixelCoords{
 			.x = i % width,
 			.y = i / width,
@@ -145,9 +147,15 @@ void Scene::resetFrameBuffer(const int width, const int height) {
 
 		int division_x = numdivisions * pixelCoords.x / width;
 
-		// TODO: Make a red gradient in the 'x' axis and a green gradient in the 'y' axis
+		//aquesta variable es el persentaje del color es el valor inicial mes el diferencial per el num de  divisions. Tambè fa que calculi el persentaje de color vermell en cada espall.
+
+		float colorPercentage = inicial + diferencial * (float)division_x;
+		int red = (int)(255.f * colorPercentage);
+
 		ImColor color{
-			 255 * division_x / numdivisions,
+			 
+			
+			 red,
 			 0,
 			 0,
 			 255,
